@@ -47,19 +47,19 @@ fn spawn_editor(src_path: &Path) -> io::Result<(Child, Pid)> {
     let pid_path = pid_dir.path().join("pid");
     let pid_path_disp = pid_path.display();
 
-    let child = Command::new("gnome-terminal")
+    let child = Command::new("alacritty")
         .stdin(Stdio::null())
         .stdout(Stdio::null())
         .stderr(Stdio::null())
-        .arg("--wait")
-        .arg("--hide-menubar")
-        .arg("--")
+        .arg("--class")
+        .arg("floating")
+        .arg("-e")
         .arg("sh")
         .arg("-c")
         .arg(formatdoc! {"
             echo $$ > '{tmp_pid_path_disp}'
             mv '{tmp_pid_path_disp}' '{pid_path_disp}'
-            exec vim '{src_path_disp}'
+            exec nvim '{src_path_disp}'
         "})
         .spawn()?;
     let mut pid = String::new();
